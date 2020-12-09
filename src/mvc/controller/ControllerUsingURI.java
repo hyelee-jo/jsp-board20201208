@@ -40,7 +40,8 @@ public class ControllerUsingURI extends HttpServlet {
     	
     	ServletConfig config = getServletConfig();
     	String configFilePath 
-    	  = config.getInitParameter("configFile").trim();
+    		= config.getInitParameter("configFile").trim();
+    	
     	
     	ServletContext application = getServletContext();
   		String filePath = application
@@ -110,10 +111,12 @@ public class ControllerUsingURI extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		request.getRequestDispatcher(prefix + view + suffix)
+		if (view != null) {
+			request.getRequestDispatcher(prefix + view + suffix)
 			.forward(request, response);
+		}
+		
 	}
 
 }
-
 
