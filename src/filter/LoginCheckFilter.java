@@ -12,30 +12,51 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import javax.servlet.annotation.WebFilter;
+/**
+ * Servlet Filter implementation class LoginCheckFilter
+ */
 
 public class LoginCheckFilter implements Filter {
 
-	@Override
-	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
-			throws IOException, ServletException {
+    /**
+     * Default constructor. 
+     */
+    public LoginCheckFilter() {
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see Filter#destroy()
+	 */
+	public void destroy() {
+		// TODO Auto-generated method stub
+	}
+
+	/**
+	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
+	 */
+	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
+		HttpServletResponse response = (HttpServletResponse) res;
+		
 		HttpSession session = request.getSession(false);
-		if(session == null || session.getAttribute("authUser") == null) {
-			HttpServletResponse response = (HttpServletResponse)res;
+		
+		if (session == null || session.getAttribute("authUser") == null) {
+			// 로그인 안되어 있으면
+			// 로그인 화면 redirect
 			response.sendRedirect(request.getContextPath() + "/login.do");
 		} else {
-			chain.doFilter(req, res);
+			//로그인 되어 있으면
+			chain.doFilter(request, response);
 		}
 		
 	}
-	
-	@Override
-	public void init(FilterConfig config) throws ServletException {
-	}
-	
-	@Override
-	public void destroy() {
+
+	/**
+	 * @see Filter#init(FilterConfig)
+	 */
+	public void init(FilterConfig fConfig) throws ServletException {
+		// TODO Auto-generated method stub
 	}
 
 }
