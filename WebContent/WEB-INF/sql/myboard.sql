@@ -19,7 +19,8 @@ CREATE TABLE article (
 );
 SELECT * FROM article;
 SELECT * FROM article_content;
-DROP table article_content;
+SELECT COUNT(*) FROM article;
+
 CREATE TABLE article_content (
     article_no NUMBER PRIMARY KEY,
     content VARCHAR2(4000)
@@ -43,6 +44,28 @@ CREATE TABLE article (
     read_cnd NUMBER,
     PRIMARY KEY (article_no)
 );
+
+-- page Ã³¸®
+SELECT count(*) FROM article;
+INSERT INTO article (writer_id, writer_name, title, regdate, moddate, read_cnt)
+VALUES ('a', 'a', 'a', sysdate, sysdate, 0);
+COMMIT;
+
+SELECT * FROM (
+SELECT article_no, title, ROW_NUMBER() OVER (ORDER BY article_no DESC) rn 
+FROM article
+--ORDER BY article_no DESC
+)
+WHERE rn BETWEEN 6 AND 10;
+
+
+
+
+
+
+
+
+
 
 
 
