@@ -14,6 +14,57 @@ import article.model.Writer;
 import jdbc.JdbcUtil;
 
 public class ArticleDao {
+	
+	public int update(Connection conn, int no, String title) throws SQLException {
+		String sql = "UPDATE article "
+				+ "SET title=?, moddate=SYSDATE "
+				+ "WHERE articl_no=?";
+		
+		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setString(1, title);
+			pstmt.setInt(2, no);
+			
+			int cnt = pstmt.executeUpdate();
+			return cnt;
+		}
+	}
+	
+	
+	public Article selectById(Connection conn, int no) throws SQLException {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT * "
+				+ "FROM article "
+				+ "WHERE article_no=?";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, no);
+			rs = pstmt.executeQuery();
+			
+			Article article = null;
+			
+			if (rs.next()) {
+				article = convertArticle(rs);
+			}
+			return article;
+		} finally {
+			JdbcUtil.close(rs, pstmt);
+		}
+		
+	}
+	
+	public void increaseReadCount(Connection conn, int no) throws SQLException {
+		String sql = "UPDATE article "
+				+ "SET read_cnt=read_cnt+1 "
+				+ "WHERE article_no=?";
+		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.setInt(1, no);
+			pstmt.executeUpdate();
+		}
+	}
+	
+	
 	public List<Article> select(Connection conn, int pageNum, int size) 
 		throws SQLException {
 		
@@ -41,10 +92,10 @@ public class ArticleDao {
 				+ "        moddate, "
 				+ "        read_cnt, "
 				+ "        ROW_NUMBER() "
-				+ "          OVER ("
+				+ "          OVER ( "
 				+ "            ORDER BY "
 				+ "            article_no "
-				+ "            DESC)"
+				+ "            DESC) "
 				+ "        rn "
 				+ "  FROM article "
 				+ ") WHERE rn "
@@ -156,5 +207,4 @@ public class ArticleDao {
 		}
 	}
 }
-
 
