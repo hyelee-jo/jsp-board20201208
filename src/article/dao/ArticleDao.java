@@ -18,7 +18,7 @@ public class ArticleDao {
 	public int update(Connection conn, int no, String title) throws SQLException {
 		String sql = "UPDATE article "
 				+ "SET title=?, moddate=SYSDATE "
-				+ "WHERE articl_no=?";
+				+ "WHERE article_no=?";
 		
 		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, title);
@@ -204,6 +204,17 @@ public class ArticleDao {
 			}
 		} finally {
 			JdbcUtil.close(rs, pstmt);
+		}
+	}
+
+
+	public void delete(Connection con, int no) throws SQLException {
+		String sql = "DELETE article WHERE article_no=?";
+		
+		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+			pstmt.setInt(1, no);
+			
+			pstmt.executeUpdate();
 		}
 	}
 }
