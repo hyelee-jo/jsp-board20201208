@@ -61,11 +61,37 @@ WHERE rn BETWEEN 6 AND 10;
 
 
 
+-- ´ñ±Û
+-- 11g
+CREATE SEQUENCE reply_seq;
+CREATE TABLE reply (
+    replyid NUMBER,
+    memberid VARCHAR2(50) NOT NULL,
+    article_no NUMBER NOT NULL,
+    body VARCHAR2(1000) NOT NULL,
+    regdate DATE NOT NULL,
+    PRIMARY KEY (replyid)
+);
+INSERT INTO reply (replyid, memberid, article_no, body, regdate)
+VALUES (reply_seq.nextval, ' ', 0, ' ', SYSDATE);
+-- 12c
+DROP TABLE reply;
+CREATE TABLE reply (
+    replyid NUMBER GENERATED AS IDENTITY,
+    memberid VARCHAR2(50) NOT NULL,
+    article_no NUMBER NOT NULL,
+    body VARCHAR2(1000) NOT NULL,
+    regdate DATE NOT NULL,
+    PRIMARY KEY (replyid)
+);
+INSERT INTO reply (memberid, article_no, body, regdate)
+VALUES (' ', 0, ' ', SYSDATE);
 
 
+SELECT * FROM reply;
 
-
-
-
-
+SELECT replyid, memberid, article_no, body, regdate
+FROM reply
+WHERE article_no=103
+ORDER BY replyid DESC;
 
